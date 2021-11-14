@@ -10,14 +10,12 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-
 import androidx.annotation.NonNull;
 import androidx.annotation.RequiresApi;
 import androidx.recyclerview.widget.RecyclerView;
-
 import com.example.showtracker.R;
+import com.example.showtracker.db.DatabaseHandler;
 import com.example.showtracker.domain.Show;
-import com.example.showtracker.persistence.ShowRepo;
 
 import java.util.List;
 
@@ -70,8 +68,10 @@ public class ShowAdapter  extends RecyclerView.Adapter<ShowAdapter.ShowHolder> {
             AlertDialog.Builder builder = new AlertDialog.Builder(v.getContext());
             builder.setMessage("Are you sure you want to delete " + show.getTitle() + "?")
                     .setPositiveButton(R.string.dialogYes, (dialog, id) -> {
-                        ShowRepo.deleteShowById(show.getId());
-                        showList = ShowRepo.shows;
+                        DatabaseHandler dbHandler = new DatabaseHandler(v.getContext());
+                        dbHandler.deleteShow(show.getId());
+                        // ShowRepo.deleteShowById(show.getId());
+                        showList = dbHandler.getAllShows();
                     })
                     .setNegativeButton(R.string.dialogNo, (dialog, id) -> {
                     });

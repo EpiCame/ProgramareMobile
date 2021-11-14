@@ -7,14 +7,12 @@ import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.RatingBar;
 import android.widget.TextView;
-
 import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-
 import com.example.showtracker.R;
+import com.example.showtracker.db.DatabaseHandler;
 import com.example.showtracker.domain.Show;
-import com.example.showtracker.persistence.ShowRepo;
 import com.google.android.material.snackbar.Snackbar;
 
 public class UpdateShowActivity extends AppCompatActivity {
@@ -24,10 +22,10 @@ public class UpdateShowActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_update_show);
-
+        DatabaseHandler dbHandler = new DatabaseHandler(this);
 
         int showId = getIntent().getIntExtra(String.valueOf(R.string.idExtra),-1);
-        Show show = ShowRepo.getShowById(showId);
+        Show show = dbHandler.getShow(showId);
         Toolbar toolbar = findViewById(R.id.updateToolbar);
 
         toolbar.setTitle(show.getTitle());
@@ -61,9 +59,10 @@ public class UpdateShowActivity extends AppCompatActivity {
                 show.setLastYear(Integer.parseInt(lastYearView.getText().toString()));
                 show.setRating(rb.getRating());
                 progressBar.setVisibility(View.VISIBLE);
-                ShowRepo.updateShow(show);
+                dbHandler.updateShow(show);
+                //ShowRepo.updateShow(show);
                 progressBar.setVisibility(View.INVISIBLE);
-
+                finish();
             }
             else{
                 Snackbar.make(view.getRootView(), R.string.fabErrorMessage, Snackbar.LENGTH_LONG)

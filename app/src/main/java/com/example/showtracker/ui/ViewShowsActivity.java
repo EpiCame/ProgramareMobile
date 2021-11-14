@@ -17,8 +17,8 @@ import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 
 import com.example.showtracker.R;
+import com.example.showtracker.db.DatabaseHandler;
 import com.example.showtracker.domain.Show;
-import com.example.showtracker.persistence.ShowRepo;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import java.util.List;
@@ -28,12 +28,14 @@ public class ViewShowsActivity extends AppCompatActivity {
     private static final int ADD_SHOW_REQUEST_CODE = 1;
     private SwipeRefreshLayout swipeRefreshLayout;
 
+    private DatabaseHandler dbHandler = new DatabaseHandler(this);
+    private ShowAdapter adapter;
+
     @RequiresApi(api = Build.VERSION_CODES.O)
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        ShowRepo.createShows();
         Toolbar toolbar = findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
 
@@ -79,15 +81,15 @@ public class ViewShowsActivity extends AppCompatActivity {
     }
 
     private void getData(){
-        RecyclerView movieList = findViewById(R.id.showList);
+        RecyclerView showList = findViewById(R.id.showList);
 
-        List<Show> shows = ShowRepo.shows;
+        List<Show> shows = dbHandler.getAllShows();
 
         ProgressBar progressBar = (ProgressBar) findViewById(R.id.progressBar);
         progressBar.setIndeterminate(true);
         progressBar.setVisibility(View.VISIBLE);
-        ShowAdapter adapter = new ShowAdapter(shows);
-        movieList.setAdapter(adapter);
+        adapter = new ShowAdapter(shows);
+        showList.setAdapter(adapter);
         progressBar.setVisibility(View.INVISIBLE);
 
     }

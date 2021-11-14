@@ -11,6 +11,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import com.example.showtracker.R;
+import com.example.showtracker.db.DatabaseHandler;
 import com.example.showtracker.domain.Show;
 import com.example.showtracker.persistence.ShowRepo;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -43,11 +44,12 @@ public class AddShowActivity extends AppCompatActivity {
 
             if (titleView.getText().length() > 0 && producerView.getText().length() > 0 && firstYearView.getText().length() > 0
             && lastYearView.getText().length() > 0 && seasonsView.getText().length() > 0) {
+                DatabaseHandler dbHandler = new DatabaseHandler(this);
                 Show showToAdd = new Show(String.valueOf(titleView.getText()), String.valueOf(producerView.getText()), Integer.parseInt(String.valueOf(firstYearView.getText())),
                         Integer.parseInt(String.valueOf(lastYearView.getText())),Integer.parseInt(String.valueOf(seasonsView.getText())), rb.getRating());
 
                 progressBar.setVisibility(View.VISIBLE);
-                ShowRepo.addShow(showToAdd);
+                dbHandler.addShow(showToAdd);
                 progressBar.setVisibility(View.INVISIBLE);
                 finish();
 
